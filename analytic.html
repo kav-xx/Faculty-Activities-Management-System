@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Charts</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+    <!-- Include Chart.js datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f6f6f6;
+        }
+
+        .navbar {
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 20px auto;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        #chartCanvas {
+            border-radius: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        label {
+            flex: 0 1 45%;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        select,
+        button {
+            flex: 0 1 45%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <h1>Interactive Charts</h1>
+        <div class="chart-dropdown">
+            <label for="chartType">Chart Type:</label>
+            <select id="chartType">
+                <option value="bar">Bar Chart</option>
+                <option value="line">Line Chart</option>
+                <option value="radar">Radar Chart</option>
+                <option value="pie">Pie Chart</option>
+                <option value="doughnut">Doughnut Chart</option>
+                <option value="polarArea">Polar Area Chart</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <canvas id="chartCanvas"></canvas>
+            <form id="dataForm">
+                <label for="fromYear">From Year:</label>
+                <input type="text" id="fromYear" name="fromYear" value="2020">
+                <label for="toYear">To Year:</label>
+                <input type="text" id="toYear" name="toYear" value="2024">
+                <label for="column_name">Column Name:</label>
+                <select id="column_name"></select>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const table = params.get('table');
+        const email = params.get('email');
+        document.addEventListener("DOMContentLoaded", function () {
+            const attend = [
+                { value: "type", text: "Type" },
+                { value: "conducted", text: "Conducted" },
+                { value: "days", text: "Days" },
+                { value: 'nba', text: 'NBA' }
+            ];
+
+            const organise = [
+                { value: "event", text: "Event" },
+                { value: "title", text: "Title" },
+                { value: "days", text: "Days" }
+            ];
+            const invite = [
+                { value: "type", text: "Type" },
+                { value: "event", text: "Event" }
+            ];
+
+            const selectElement = document.getElementById("column_name");
+
+            selectElement.innerHTML = '';
+
+            if (table === 'sa') {
+                attend.forEach(optionData => {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text;
+                    selectElement.appendChild(option);
+                });
+            }
+            if (table === 'so') {
+                organise.forEach(optionData => {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text;
+                    selectElement.appendChild(option);
+                });
+            }
+            if (table === 'si') {
+                invite.forEach(optionData => {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text;
+                    selectElement.appendChild(option);
+                });
+            }
+        });
+
+        const dataForm = document.getElementById('dataForm');
+        const chartTypeSelect = document.getElementById('chartType');
+        const chartCanvas = document.getElementById('chartCanvas');
+        let currentChart;
+
+        // Function to fetch data and render charts
+        async function fetchDataAndRenderChart() {
+            const startYearInput = document.getElementById('fromYear');
+            const endYearInput = document.getElementById('toYear');
+            const startYear = startYearInput.value;
+            const endYear = endYearInput.value;
+            const chartType = chartTypeSelect.value;
+            const columnName = document.getElementById('column_name').value;
+
+            try {
+
+                if (currentChart instanceof Chart) {
+                    currentChart.destroy();
+                }
+                const colors = [
+                    '#4CAF50', '#FF6384', '#36A2EB', '#FFCE56', '#AA65CC', '#FFA07A', '#20B2AA', '#778899', '#FF4500', '#00CED1'
+                ];
+
+                if (columnName === 'nba') {
+                    const response = await fetch(`/nba`);
+                    const data = await response.json()
+
+                    
+                    function fillMissingYears(data, nbaValue) {
+                        const years = Array.from(new Set(data.map(item => item.ac_year))); // Get all unique years
+                        const filledData = [];
+
+                        years.forEach(year => {
+                            const entry = data.find(item => item.ac_year === year);
+                            if (entry) {
+                                filledData.push(entry);
+                            } else {
+                                filledData.push({ nba: nbaValue, ac_year: year, count: '0' });
+                            }
+                        });
+
+                        return filledData;
+                    }
+
+                    // Filter data for nba 3 and fill missing years
+                    // const nba3Data = fillMissingYears(data.filter(item => item.nba === '3'), '3');
+                    // const nba5Data = fillMissingYears(data.filter(item => item.nba === '5'), '5');
+                    const nba3Data = data.filter(item => item.nba === '3')
+                    const nba5Data = data.filter(item => item.nba === '5')
+
+                    const chartData = {
+                        labels: nba3Data.map((val) => val.ac_year),
+                        datasets: [
+                            {
+                                label: 'NBA Points 3',
+                                data: nba3Data.map((val) => val.count),
+                                backgroundColor: 'rgba(255, 69, 0, 0.6)',
+                                stack: 'Stack 0',
+                            },
+                            {
+                                label: 'NBA Points 5',
+                                data: nba5Data.map((val) => val.count),
+                                backgroundColor: 'rgba(170, 101, 204, 0.6)',
+                                stack: 'Stack 1',
+                            },
+
+                        ]
+                    };
+                    const config = {
+    type: 'bar',
+    data: chartData,
+    options: {
+        plugins: {
+            datalabels: {
+                display: true,
+                color: '#000',
+                anchor: 'center',
+                align: 'end',
+                formatter: (value) => value,
+                font: {
+                    weight: 'bold'
+                }
+            },
+            title: {
+                display: true,
+                text: 'NBA Chart'
+            },
+        },
+        responsive: true,
+        interaction: {
+            intersect: false,
+        },
+        scales: {
+            x: {
+                stacked: true,
+            }
+        }
+    },
+    plugins: [ChartDataLabels] // This is the correct placement
+};
+
+                    new Chart(document.getElementById('chartCanvas'), config)
+                }
+
+                else {
+                    const response = await fetch(`/days-data?startYear=${startYear}&endYear=${endYear}&columnName=${columnName}&email=${email}&table=${table}`);
+                    const data = await response.json();
+                    currentChart = new Chart(chartCanvas, {
+                        type: chartType,
+                        data: {
+                            labels: data.map(item => item.days),
+                            datasets: [{
+                                label: 'Data',
+                                data: data.map(item => item.count),
+                                backgroundColor: colors,
+                                borderColor: colors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                datalabels: {
+                                    display: true,
+                                    color: '#000',
+                                    anchor: 'end',
+                                    align: 'end',
+                                    formatter: (value) => value,
+                                    font: {
+                                        weight: 'bold'
+                                    }
+                                },
+                            },
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [ChartDataLabels]
+                    });
+
+                }
+
+            } catch (error) {
+                console.error('Error fetching or rendering chart:', error);
+            }
+        }
+
+        dataForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            await fetchDataAndRenderChart();
+        });
+
+        // Render chart initially
+        // fetchDataAndRenderChart();
+    </script>
+</body>
+
+</html>

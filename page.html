@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/admin_style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+    <!-- Include Chart.js datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+
+</head>
+
+<body>
+    <div class="navbar">
+        <div class="brand"><b>SSN COLLEGE OF ENGINEERING</b></div>
+        <div class="links">
+            <button id="sdp_attended" class="btn btn-primary">SDP Attended</button>
+            <button id="sdp_organised" class="btn btn-primary">SDP Organised</button>
+            <button id="sdp_invited" class="btn btn-primary">Invited Talks</button>
+            <!-- <a href="#" id="sdp_invited">Invited Talks</a> -->
+        </div>
+    </div>
+
+    <div id="select_table">
+        <!-- <button id="sdp_attended" class="btn btn-primary">SDP Attended</button> -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("sdp_attended").addEventListener("click", function () {
+                    const params = new URLSearchParams(window.location.search);
+                    const email = params.get('email');
+                    if (email === 'none') {
+                        window.location.href = "sdp1.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('sa');
+                    }
+                    else {
+                        window.location.href = "faculty_attended.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('sa');
+
+                    }
+                });
+            });
+
+
+        </script>
+        <!-- <button id="sdp_organised" class="btn btn-primary">SDP Organised</button> -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("sdp_organised").addEventListener("click", function () {
+                    const params = new URLSearchParams(window.location.search);
+                    const email = params.get('email');
+                    if (email === 'none') {
+                        window.location.href = "sdp2.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('so');
+                    }
+                    else {
+                        window.location.href = "faculty_organised.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('so');
+
+                    }
+                });
+            });
+        </script>
+        <!-- <button id="sdp_invited" class="btn btn-primary">Invited Talks</button> -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("sdp_invited").addEventListener("click", function () {
+                    const params = new URLSearchParams(window.location.search);
+                    const email = params.get('email');
+                    if (email === 'none') {
+                        window.location.href = "sdp3.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('si');
+                    }
+                    else {
+                        window.location.href = "faculty_invited.html?email=" + encodeURIComponent(email) + "&table=" + encodeURIComponent('si');
+
+                    }
+                });
+            });
+        </script>
+    </div>
+    <p>
+
+
+    </p>
+    <div>
+        <div id="all">
+            <div id="select_graph" display="in-line">
+                <label for="fromYear">From Year:</label>
+                <input type="number" id="fromYear" value="2020" step="1" placeholder="2020">
+                <label for="toYear">To Year:</label>
+                <input type="number" id="toYear" value="2024" step="1" placeholder="2024">
+
+                <button id="displayButton" class="btn btn-primary">Display</button>
+            </div>
+            <div class="container">
+                <div id="graph1" class="col">
+                    <canvas id="barChart"></canvas>
+                </div>
+
+                <div id="graph2" class="col">
+                    <canvas id="pieChart"></canvas>
+                </div>
+
+                <div id="bar_new" class="col">
+                    <canvas id="barChartNew"></canvas>
+                </div>
+                <div id="piechart_new" class="col">
+                    <canvas id="pieChartNew"></canvas>
+                </div>
+
+                <div id="bar_other" class="col">
+                    <canvas id="barChartOther"></canvas>
+                </div>
+
+                <div id="piechart_other" class="col">
+                    <canvas id="pieChartOther"></canvas>
+                </div>
+
+            </div>
+        </div>
+        <script src="consolidated.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    </div>
+
+    <script>
+        window.onload = function () {
+            // Display the container
+            const params = new URLSearchParams(window.location.search);
+            const email = params.get('email');
+            if (email === 'none') {
+                document.getElementById('all').style.display = 'block';
+            }
+            else {
+
+            }
+        };
+
+        // Get the button element
+        var displayButton = document.getElementById("displayButton");
+
+        // Add event listener to the button
+        displayButton.addEventListener("click", function () {
+            var g1 = document.getElementById("graph1");
+            g1.style.border = " 2px solid black";
+            var g2 = document.getElementById("graph2");
+            g2.style.border = " 2px solid black";
+            var g3 = document.getElementById("bar_new");
+            g3.style.border = " 2px solid black";
+            var g4 = document.getElementById("piechart_new");
+            g4.style.border = " 2px solid black";
+            var g5 = document.getElementById("bar_other");
+            g5.style.border = " 2px solid black";
+            var g6 = document.getElementById("piechart_other");
+            g6.style.border = " 2px solid black";
+        });
+
+
+    </script>
+
+</body>
+
+</html>
+
+

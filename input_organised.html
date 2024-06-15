@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Organised</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="public/css/input.css">
+</head>
+
+<body>
+
+  <div class="container mt-5">
+    <h2 class="mb-4">Input Organised</h2>
+
+    <form action="/input_organised" method="POST" enctype="multipart/form-data">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="name4">Name</label>
+          <input type="text" name="name" class="form-control" id="name4" placeholder="Name">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="event">Event</label>
+          <input type="text" name="event" class="form-control" id="event4" placeholder="Event">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" name="Title" class="form-control" id="title" placeholder="Title">
+      </div>
+
+      <div class="form-group">
+        <label for="participant2">Participant</label>
+        <input type="text" name="participant" class="form-control" id="participant2" placeholder="Participant">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="resource">Resource</label>
+          <input type="text" name="resource" class="form-control" id="resource" placeholder="Resource">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="sponsors4">Sponsors</label>
+          <input type="text" name="sponsors" class="form-control" id="sponsors4" placeholder="Sponsors">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="expenditure4">Expenditure</label>
+          <input type="text" name="expenditure" class="form-control" id="expenditure4" placeholder="Expenditure">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="start_date4">Start Date</label>
+          <input type="date" name="start_date" class="form-control" id="start_date4">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="end_date4">End Date</label>
+          <input type="date" name="end_date" class="form-control" id="end_date4">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="file">File:</label>
+        <input type="file" id="file" name="file" class="form-control-file">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+</body>
+
+</html>
