@@ -1,7 +1,4 @@
 # Faculty-Activities-Management-System
-This is a sample faculty activities management system done for our college project during 2nd year.
-
-# Faculty Management System
 
 Welcome to the Faculty Management System project! This project aims to provide a platform to manage faculty-related information and activities efficiently.
 
