@@ -7,7 +7,6 @@ Welcome to the Faculty Management System project! This project aims to provide a
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Project Structure](#project-structure)
 - [Contact](#contact)
 
 ## Introduction
@@ -57,6 +56,10 @@ To use the Faculty Management System, follow these steps:
 2. Register a new account or log in with an existing account.
 3. Use the dashboard to manage faculty details, track academic records, and upload documents.
 
-## Project Structure
-Here's a brief overview of the project structure:
+
+## Contact
+For any inquiries or support, please contact:
+
+- Email: [kavyasrivj271@gmail.com](mailto:kavyasrivj271@gmail.com)
+- GitHub: [https://github.com/kav-xx/](https://github.com/kav-xx/)
 
